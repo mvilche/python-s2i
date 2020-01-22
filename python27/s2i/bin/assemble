@@ -14,6 +14,10 @@ PIP="pip2"
 REQUIREMENTS_FILE="requirements.txt"
 shopt -u dotglob
 
+mkdir -p /home/app/.local/lib/python2.7/site-packages
+mkdir -p /home/app/.local/bin
+chmod u=g -R /home/app/.local/lib/python2.7/site-packages /home/app/.local/bin
+
 
 if [[ "$1" == "-h" ]]; then
 	exec /usr/libexec/s2i/usage
