@@ -256,7 +256,7 @@
   parameters:
     - name: PYTHON_VERSION
       displayName: PYTHON Version - See https://github.com/mvilche/python-s2i.git
-      value: '27'
+      value: 'python27'
       required: true
     - name: APP_NAME
       displayName: Application Name
