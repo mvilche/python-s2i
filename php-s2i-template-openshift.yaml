@@ -2,15 +2,15 @@
   apiVersion: v1
   kind: Template
   metadata:
-    name: PYTHON-openshift-s2i
+    name: python-openshift-s2i
     labels:
-      template: PYTHON-openshift-s2i
+      template: python-openshift-s2i
       autor: "Martin_Fabrizzio_Vilche"
     annotations:
-      openshift.io/display-name: "PYTHON-openshift-s2i-mvilche"
+      openshift.io/display-name: "python-openshift-s2i-mvilche"
       iconClass: "icon-github"
       description: >-
-        PYTHON Application S2i Images
+        python Application S2i Images
         Martin Fabrizzio Vilche.
         https://github.com/mvilche.
 
