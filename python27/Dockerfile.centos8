@@ -24,14 +24,14 @@ sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/my
 COPY s2i/bin/ /usr/libexec/s2i
 
 RUN ln -sf /usr/bin/$PYTHON_VERSION /usr/bin/python && \
+setfacl -R -d -m g::rwx /home && \
+setfacl -R -d -m g::rwx /opt && \
 adduser -u 1001 app && usermod -aG 0 app && rm -rf /etc/localtime  && touch /etc/localtime /etc/timezone && \
 mkdir /opt/app  && \
 chown -R 1001 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
 chgrp -R 0 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
 chmod -R g=u /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
-chmod +x  /usr/libexec/s2i/* && \
-setfacl -R -d -m g::rwx /home && \
-setfacl -R -d -m g::rwx /opt
+chmod +x  /usr/libexec/s2i/*
 
 WORKDIR /opt/app
 
