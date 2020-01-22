@@ -37,9 +37,7 @@ WORKDIR /opt/app
 
 ENV HOME /home/app
 
-USER 1001
-
-RUN pip install -U pip
+USER 1001:0
 
 EXPOSE 8000
 
