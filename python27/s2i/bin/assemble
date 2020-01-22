@@ -19,7 +19,8 @@ if [[ "$1" == "-h" ]]; then
 	exec /usr/libexec/s2i/usage
 fi
 
-pip install -U pip
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &> /dev/null && \
+python get-pip.py --user && rm -rf python get-pip.py
 
 
   if [ -d /tmp/artifacts/.local ]; then
@@ -27,7 +28,6 @@ pip install -U pip
   cp -rf /tmp/artifacts/.local /home/app/
   rm -rf /tmp/artifacts/.local
  fi
-
 
 echo "---> INSTALANDO CODIGO FUENTE..."
 cp -rf /tmp/src/.  $DOCROOT/
@@ -44,7 +44,7 @@ if [[ -f "/opt/app/$REQUIREMENTS_FILE" ]]; then
 echo "----> REQUIREMENTS ENCONTRADO!"
 echo "----> INSTALANDO DEPENDENCIAS..."
 cd $DOCROOT	
-$PIP install -r $REQUIREMENTS_FILE
+$PIP install -r $REQUIREMENTS_FILE --user
 echo "----> FIN INSTALACION DEPENDENCIAS..."
 fi
 
