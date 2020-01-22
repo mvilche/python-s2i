@@ -44,4 +44,4 @@ if [ "$MIGRATIONS" == 1 ]; then
 	echo "···································································································"
 fi
 
-$DOCROOT/manage.py runserver
+/usr/bin/python $DOCROOT/manage.py runserver	
