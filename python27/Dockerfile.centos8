@@ -31,7 +31,9 @@ mkdir /opt/app  && \
 chown -R 1001 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
 chgrp -R 0 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
 chmod -R g=u /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
-chmod +x  /usr/libexec/s2i/*
+chmod +x  /usr/libexec/s2i/* && \
+setfacl -R -d -m g::rwx /home && \
+setfacl -R -d -m g::rwx /opt
 
 WORKDIR /opt/app
 

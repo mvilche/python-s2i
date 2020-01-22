@@ -19,7 +19,7 @@ if [[ "$1" == "-h" ]]; then
 	exec /usr/libexec/s2i/usage
 fi
 
- pip install -U pip
+pip install -U pip
 
 
   if [ -d /tmp/artifacts/.local ]; then
