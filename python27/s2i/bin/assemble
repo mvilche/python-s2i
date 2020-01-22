@@ -22,7 +22,8 @@ fi
 
   if [ -d /tmp/artifacts/.local ]; then
   echo "---> RESTAURANDO DEPENDENCIAS DESDE CACHE..."
-  mv /tmp/artifacts/.local /home/app/
+  cp -rf /tmp/artifacts/.local /home/app/
+  rm -rf /tmp/artifacts/.local
  fi
 
 
