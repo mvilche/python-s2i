@@ -1,0 +1,40 @@
+FROM centos:8
+
+ENV PYTHON_VERSION=python2 \
+PIP_VERSION=pip2 \
+EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
+      io.k8s.description="python s2i images" \
+      io.k8s.display-name="python Applications" \
+      io.openshift.tags="builder,npm,python,centos" \
+      io.openshift.expose-services="8000" \
+      io.openshift.s2i.scripts-url="image:///usr/libexec/s2i"
+      
+
+RUN yum update -y && yum install $EPEL -y
+RUN yum install git $PYTHON_VERSION $PYTHON_VERSION-virtualenv \
+openssl libxslt-devel libffi-devel openssl-devel gcc gcc-c++ kernel-devel unzip curl nc which nodejs \
+libjpeg-turbo libjpeg-turbo-devel zlib-devel mariadb-devel openldap-devel cairo cyrus-sasl-devel swig libxslt-devel automake autoconf libtool libffi-devel -y && \
+npm install -g grunt sass && \
+yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null && \
+sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i.bkp
+
+
+COPY s2i/bin/ /usr/libexec/s2i
+
+RUN ln -sf /usr/bin/$PYTHON_VERSION /usr/bin/python && \
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+python get-pip.py && rm -rf python get-pip.py && \
+mkdir /opt/app && adduser -u 1001 app && usermod -aG 0 app && rm -rf /etc/localtime  && touch /etc/localtime /etc/timezone && \
+chown  -R 1001 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
+chgrp -R 0 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
+chmod -R g=u /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules
+
+WORKDIR /opt/app
+
+USER 1001:0
+
+EXPOSE 8000
+
+CMD ["/usr/libexec/s2i/usage"]
