@@ -21,23 +21,31 @@ yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cach
 sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i.bkp
 
 
+ENV HOME=/opt/app \
+PATH=$HOME/.local/bin/:$PATH \
+PYTHONUNBUFFERED=1 \
+PYTHONIOENCODING=UTF-8 \
+LC_ALL=en_US.UTF-8 \
+LANG=en_US.UTF-8 \
+PIP_NO_CACHE_DIR=off
+
 COPY s2i/bin/ /usr/libexec/s2i
 
 RUN ln -sf /usr/bin/$PYTHON_VERSION /usr/bin/python && \
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &> /dev/null && \
+python get-pip.py && rm -rf python get-pip.py && \
 setfacl -R -d -m g::rwx /home && \
 setfacl -R -d -m g::rwx /opt && \
-adduser -u 1001 app && usermod -aG 0 app && rm -rf /etc/localtime  && touch /etc/localtime /etc/timezone && \
+rm -rf /etc/localtime && touch /etc/localtime /etc/timezone && \
 mkdir /opt/app  && \
-chown -R 1001 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
-chgrp -R 0 /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
-chmod -R g=u /opt /home/app /usr/lib/$PYTHON_VERSION*  /usr/include/$PYTHON_VERSION* /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
+chown -R 1001 /opt /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
+chgrp -R 0 /opt /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
+chmod -R g=u /opt /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \
 chmod +x  /usr/libexec/s2i/*
 
 WORKDIR /opt/app
 
-ENV HOME /home/app
-
-USER 1001:0
+USER 1001
 
 EXPOSE 8000
 

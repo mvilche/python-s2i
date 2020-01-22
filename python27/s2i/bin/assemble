@@ -19,19 +19,20 @@ if [[ "$1" == "-h" ]]; then
 	exec /usr/libexec/s2i/usage
 fi
 
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &> /dev/null && \
-python get-pip.py --user && rm -rf python get-pip.py
-
 
   if [ -d /tmp/artifacts/.local ]; then
   echo "---> RESTAURANDO DEPENDENCIAS DESDE CACHE..."
-  cp -rf /tmp/artifacts/.local /home/app/
+  cp -rf /tmp/artifacts/.local $DOCROOT
   rm -rf /tmp/artifacts/.local
  fi
+
 
 echo "---> INSTALANDO CODIGO FUENTE..."
 cp -rf /tmp/src/.  $DOCROOT/
 rm -rf /tmp/src
+
+
+/usr/libexec/s2i/fix-perm $DOCROOT -P
 
 if [[ ! -z "$OVERRIDE_REQUIREMENTS_FILE" ]]; then
 echo "----> REQUIREMENTS OVERRIDE SETEADO ENCONTRADO!"
