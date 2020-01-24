@@ -34,8 +34,6 @@ COPY s2i/bin/ /usr/libexec/s2i
 RUN ln -sf /usr/bin/$PYTHON_VERSION /usr/bin/python && \
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py &> /dev/null && \
 python get-pip.py && rm -rf python get-pip.py && \
-setfacl -R -d -m g::rwx /home && \
-setfacl -R -d -m g::rwx /opt && \
 rm -rf /etc/localtime && touch /etc/localtime /etc/timezone && \
 mkdir /opt/app  && \
 chown -R 1001 /opt /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_modules && \

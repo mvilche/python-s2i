@@ -32,8 +32,6 @@ cp -rf /tmp/src/.  $DOCROOT/
 rm -rf /tmp/src
 
 
-/usr/libexec/s2i/fix-perm $DOCROOT -P
-
 if [[ ! -z "$OVERRIDE_REQUIREMENTS_FILE" ]]; then
 echo "----> REQUIREMENTS OVERRIDE SETEADO ENCONTRADO!"
 echo "----> DEFINIENDO ARCHIVO $OVERRIDE_REQUIREMENTS_FILE"
@@ -56,6 +54,7 @@ cd $DOCROOT
 $EXTRA_INSTALL_ARGUMENTS
 echo "----> FIN EJECUCION EXTRA ARGUMENTS..."
 fi
-
+/usr/libexec/s2i/fix /opt
+/usr/libexec/s2i/fix $HOME
 #######################################
 echo "----> INSTALACION FINALIZADA"
