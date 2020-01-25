@@ -22,7 +22,6 @@ sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/my
 
 
 ENV HOME=/opt/app \
-PATH=$HOME/.local/bin/:$PATH \
 PYTHONUNBUFFERED=1 \
 PYTHONIOENCODING=UTF-8 \
 LC_ALL=en_US.UTF-8 \
@@ -42,6 +41,8 @@ chmod -R g=u /opt /etc/timezone /etc/localtime /usr/libexec/s2i /usr/lib/node_mo
 chmod +x  /usr/libexec/s2i/*
 
 WORKDIR /opt/app
+
+ENV PATH=$HOME/.local/bin:$PATH
 
 USER 1001
 

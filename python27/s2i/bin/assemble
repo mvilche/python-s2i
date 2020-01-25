@@ -54,7 +54,11 @@ cd $DOCROOT
 $EXTRA_INSTALL_ARGUMENTS
 echo "----> FIN EJECUCION EXTRA ARGUMENTS..."
 fi
-/usr/libexec/s2i/fix /opt
+
+/usr/libexec/s2i/fix $DOCROOT
 /usr/libexec/s2i/fix $HOME
 #######################################
 echo "----> INSTALACION FINALIZADA"
+
+
+
