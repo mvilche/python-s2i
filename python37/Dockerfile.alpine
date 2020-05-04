@@ -1,24 +1,18 @@
-FROM centos:8
-
-ENV PYTHON_VERSION=python3 \
-EPEL=https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+FROM alpine:3.11
 
 LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
       io.k8s.description="python s2i images" \
       io.k8s.display-name="python Applications" \
-      io.openshift.tags="builder,npm,python,centos" \
+      io.openshift.tags="builder,npm,python,alpine" \
       io.openshift.expose-services="8000" \
       io.openshift.s2i.scripts-url="image:///usr/libexec/s2i"
-      
 
-RUN yum install glibc-langpack-en glibc-langpack-es glibc-all-langpacks -y && \
-yum update -y && yum install $EPEL -y
-RUN yum install git $PYTHON_VERSION $PYTHON_VERSION-virtualenv \
-openssl libxslt-devel libffi-devel openssl-devel gcc gcc-c++ kernel-devel unzip curl nc which nodejs \
-libjpeg-turbo libjpeg-turbo-devel zlib-devel mariadb-devel openldap-devel cairo cyrus-sasl-devel swig libxslt-devel automake autoconf libtool libffi-devel -y && \
-npm install -g grunt sass && \
-yum autoremove -y &> /dev/null && yum clean all &> /dev/null && rm -rf /var/cache/yum &> /dev/null && \
-sed '/st_mysql_options options;/a unsigned int reconnect;' /usr/include/mysql/mysql.h -i.bkp
+ENV PYTHON_VERSION=python3 
+
+RUN apk add --update --no-cache $PYTHON_VERSION alpine-sdk findutils $PYTHON_VERSION-dev \
+openssl curl tzdata busybox-extras bash cmake gcc libxml2 \
+       automake g++ subversion python3-dev \
+       libxml2-dev libxslt-dev lapack-dev gfortran 
 
 
 ENV HOME=/opt/app \
@@ -44,7 +38,7 @@ chmod +x  /usr/libexec/s2i/*
 
 WORKDIR /opt/app
 
-ENV PATH=$HOME/.local/bin:$PATH
+ENV PATH=/opt/app/.local/bin:$PATH
 
 USER 1001
 

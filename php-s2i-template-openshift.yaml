@@ -53,8 +53,6 @@
                   value:
                 - name: TIMEZONE
                   value: America/Montevideo
-                - name: MIGRATIONS
-                  value: '0'
               image: "${APP_NAME}-${PYTHON_VERSION}:latest"
               imagePullPolicy: Always
               name: ${APP_NAME}
@@ -130,7 +128,6 @@
           memory: 1024Mi
       runPolicy: Serial
       source:
-        contextDir: ${CONTEXT_DIR}
         git:
           uri: ${APP_REPO}
         type: Git
@@ -138,9 +135,9 @@
         sourceStrategy:
           env:
             - name: EXTRA_INSTALL_ARGUMENTS
-              value: npm install
+              value:
             - name: OVERRIDE_REQUIREMENTS_FILE
-              value: requirements-dev.txt        
+              value:    
           incremental: true
           from:
             kind: ImageStreamTag
@@ -233,7 +230,7 @@
         type: Git
       strategy:
         dockerStrategy:
-          dockerfilePath: Dockerfile.centos8
+          dockerfilePath: Dockerfile.ubuntu
         type: Docker
       successfulBuildsHistoryLimit: 5
       triggers:
@@ -256,7 +253,7 @@
   parameters:
     - name: PYTHON_VERSION
       displayName: PYTHON Version - See https://github.com/mvilche/python-s2i.git
-      value: 'python27'
+      value: 'python37'
       required: true
     - name: APP_NAME
       displayName: Application Name
@@ -265,10 +262,6 @@
     - name: APP_REPO
       displayName: PYTHON application repository
       value: 'https://github.com/myuser/PYTHON-composer-sample-app.git'
-      required: true
-    - name: CONTEXT_DIR
-      displayName: context dir application in git
-      value: '.'
       required: true
 
   ###############

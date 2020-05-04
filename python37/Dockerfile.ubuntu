@@ -1,0 +1,38 @@
+FROM python:3.7
+
+LABEL autor="Martin Vilche <mfvilche@gmail.com>" \
+      io.k8s.description="python s2i images" \
+      io.k8s.display-name="python Applications" \
+      io.openshift.tags="builder,npm,python,alpine" \
+      io.openshift.expose-services="8000" \
+      io.openshift.s2i.scripts-url="image:///usr/libexec/s2i"
+
+ENV PYTHON_VERSION=python3 
+
+ENV HOME=/opt/app \
+PYTHONUNBUFFERED=1 \
+PYTHONIOENCODING=UTF-8 \
+LANG=es_ES.UTF-8 \
+LANGUAGE=es_ES.UTF-8 \
+LC_COLLATE=C \
+LC_CTYPE=es_ES.UTF-8 \
+PIP_NO_CACHE_DIR=off
+
+COPY s2i/bin/ /usr/libexec/s2i
+
+RUN rm -rf /etc/localtime && touch /etc/localtime /etc/timezone && \
+mkdir /opt/app  && \
+chown -R 1001 /opt /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chgrp -R 0 /opt /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod -R g=u /opt /etc/timezone /etc/localtime /usr/libexec/s2i && \
+chmod +x  /usr/libexec/s2i/*
+
+WORKDIR /opt/app
+
+ENV PATH=/opt/app/.local/bin:$PATH
+
+USER 1001
+
+EXPOSE 8000
+
+CMD ["/usr/libexec/s2i/usage"]

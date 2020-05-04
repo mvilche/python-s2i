@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# S2I assemble script for the 's2i-maven-java' image.
+# The 'assemble' script builds your application source so that it is ready to run.
+#
+# For more information refer to the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+set -e
+
+DOCROOT="/opt/app"
+REQUIREMENTS_FILE="requirements.txt"
+shopt -u dotglob
+
+
+if [[ "$1" == "-h" ]]; then
+	exec /usr/libexec/s2i/usage
+fi
+
+
+  if [ -d /tmp/artifacts/.local ]; then
+  echo "---> RESTAURANDO DEPENDENCIAS DESDE CACHE..."
+  cp -rf /tmp/artifacts/.local $DOCROOT
+  rm -rf /tmp/artifacts/.local
+ fi
+
+
+echo "---> INSTALANDO CODIGO FUENTE..."
+cp -rf /tmp/src/.  $DOCROOT/
+rm -rf /tmp/src
+
+
+if [[ ! -z "$OVERRIDE_REQUIREMENTS_FILE" ]]; then
+echo "----> REQUIREMENTS OVERRIDE SETEADO ENCONTRADO!"
+echo "----> DEFINIENDO ARCHIVO $OVERRIDE_REQUIREMENTS_FILE"
+REQUIREMENTS_FILE=$OVERRIDE_REQUIREMENTS_FILE
+fi
+
+
+if [[ -f "/opt/app/$REQUIREMENTS_FILE" ]]; then
+echo "----> REQUIREMENTS ENCONTRADO!"
+echo "----> INSTALANDO DEPENDENCIAS..."
+cd $DOCROOT	
+pip install -r $REQUIREMENTS_FILE --user
+echo "----> FIN INSTALACION DEPENDENCIAS..."
+fi
+
+if [[ ! -z "$EXTRA_INSTALL_ARGUMENTS" ]]; then
+echo "----> EXTRA ARGUMENTS ENCONTRADO!"
+echo "----> EJECUTANDO COMANDO EN DOCROOT $DOCROOT ..."
+cd $DOCROOT
+$EXTRA_INSTALL_ARGUMENTS
+echo "----> FIN EJECUCION EXTRA ARGUMENTS..."
+fi
+
+/usr/libexec/s2i/fix $DOCROOT
+/usr/libexec/s2i/fix $HOME
+#######################################
+echo "----> INSTALACION FINALIZADA"
+
+
+
